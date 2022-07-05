@@ -28,7 +28,7 @@ var app = builder.Build();
 
 app.UseCors(builder =>
 {
-    builder.WithOrigins("localhost:7104", "localhost", "https://localhost:7104")
+    builder.WithOrigins("localhost:7104", "localhost", "https://localhost:7104", "https://cbchat.duckdns.org")
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
@@ -40,6 +40,7 @@ var webSocketOptions = new WebSocketOptions
 };
 
 webSocketOptions.AllowedOrigins.Add("https://localhost:7104");
+webSocketOptions.AllowedOrigins.Add("https://cbchat.duckdns.org");
 webSocketOptions.AllowedOrigins.Add("localhost:7104");
 webSocketOptions.AllowedOrigins.Add("localhost");
 
