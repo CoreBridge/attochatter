@@ -3,12 +3,14 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors();
+builder.Services.AddSignalR().AddJsonProtocol(options => {
+    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+});
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSignalR();
-builder.Services.AddCors();
 builder.Services.AddLettuceEncrypt();
 
 builder.WebHost.UseUrls("https://localhost:7104", "http://localhost:5104","https://cbchat.duckdns.org:443/", "http://cbchat.duckdns.org:56776/");
@@ -24,26 +26,32 @@ builder.WebHost.ConfigureKestrel(k =>
 
 var app = builder.Build();
 
+app.UseCors(builder =>
+{
+    builder.WithOrigins("localhost:7104", "localhost", "https://localhost:7104")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+});
+app.MapHub<attochatter.Hubs.ChatHub>("/hub", o =>
+{
+    //o.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
+});
+
+app.UseWebSockets();
+
+app.UseHttpsRedirection();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseCors(builder =>
-{
-    builder.WithOrigins("http://localhost")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
-});
-
-app.UseHttpsRedirection();
-
-app.UseDefaultFiles();
-app.UseStaticFiles(); 
-app.MapHub<attochatter.Hubs.ChatHub>("/hub");
 
 
 var summaries = new[]
