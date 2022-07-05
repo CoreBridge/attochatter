@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>attochatter</title>
+    <style>
+        body{
+            margin: 3em;
+        }
+        .frame{
+            padding: 1em;
+            border: 1px solid black;
+            background: #eee;
+        }
+        .message:before{
+            content:"> "
+        }
+        .message{
+
+        }
+        .input{
+            margin-top: 1em;
+            border-top: 1px solid black;
+        }
+        .error-box {
+            background: #e13d3d;
+            color: white;
+            padding: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        attochatter&nbsp;<span title="typescript is not booted" class="ts-canary">❌</span>
+    </h1>
+    <div>
+        <label>
+            Username: 
+            <input type="text" name="username" class="username" value="" />
+        </label>
+    </div>
+    <div class="frame">
+        <div class="messages">
+            <div class="message">
+                no messages in memory
+            </div>
+        </div>
+        <div class="input">
+            <input type="text" name="chat" class="chat" value="" />
+            <button type="button" class="send">&rang;</button>
+        </div>
+    </div>
+    <div class="error-box"></div>
+</body>
+</html>
