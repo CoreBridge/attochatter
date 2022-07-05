@@ -33,12 +33,22 @@ app.UseCors(builder =>
         .AllowAnyMethod()
         .AllowCredentials();
 });
+
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2)
+};
+
+webSocketOptions.AllowedOrigins.Add("https://localhost:7104");
+webSocketOptions.AllowedOrigins.Add("localhost:7104");
+webSocketOptions.AllowedOrigins.Add("localhost");
+
+app.UseWebSockets(webSocketOptions);
+
 app.MapHub<attochatter.Hubs.ChatHub>("/hub", o =>
 {
     //o.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
 });
-
-app.UseWebSockets();
 
 app.UseHttpsRedirection();
 
