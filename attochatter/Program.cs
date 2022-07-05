@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+builder.Services.AddCors();
+builder.Services.AddLettuceEncrypt();
+
+builder.WebHost.UseUrls("https://localhost:7104", "http://localhost:5104","https://cbchat.duckdns.org:443/", "http://cbchat.duckdns.org:56776/");
+builder.WebHost.ConfigureKestrel(k =>
+{
+    var appServices = k.ApplicationServices;
+    k.ConfigureHttpsDefaults(h =>
+    {
+        //h.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
+        h.UseLettuceEncrypt(appServices);
+    });
+});
 
 var app = builder.Build();
 
@@ -17,11 +31,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(builder =>
+{
+    builder.WithOrigins("http://localhost")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+});
+
 app.UseHttpsRedirection();
 
 app.UseDefaultFiles();
 app.UseStaticFiles(); 
 app.MapHub<attochatter.Hubs.ChatHub>("/hub");
+
 
 var summaries = new[]
 {
