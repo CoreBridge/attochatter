@@ -5,7 +5,7 @@ canary.innerHTML = "✅";
 canary.title = "TS booted";
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub")
+    .withUrl("/hub") //"https://cbchat.duckdns.org:7104
     .build();
 
 connection.on("pong", (response: string) => {

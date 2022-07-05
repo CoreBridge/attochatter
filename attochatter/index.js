@@ -5,7 +5,7 @@ var canary = document.querySelector(".ts-canary");
 canary.innerHTML = "✅";
 canary.title = "TS booted";
 var connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub")
+    .withUrl("/hub") //"https://cbchat.duckdns.org:7104
     .build();
 connection.on("pong", function (response) {
     canary.innerHTML = "🌐";
@@ -19,7 +19,9 @@ var divMessages = document.querySelector(".messages");
 //    divMessages.scrollTop = divMessages.scrollHeight;
 //});
 var errorBox = document.querySelector(".error-box");
-connection.start().catch(function (err) { return errorBox.textContent = err; });
+connection.start().catch(function (err) { return errorBox.textContent = err; }).then(function () {
+    connection.send("Ping");
+});
 var chat = document.querySelector(".chat");
 chat.addEventListener("keyup", function (e) {
     if (e.key === "Enter") {
@@ -33,4 +35,3 @@ function send() {
     //    () => (chat.value = "")
     //);
 }
-connection.send("ping");
