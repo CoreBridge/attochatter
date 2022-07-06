@@ -1,3 +1,4 @@
+global using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.FileProviders;
 

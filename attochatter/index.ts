@@ -7,6 +7,8 @@ const chatroomInput: HTMLInputElement = document.querySelector(".chatroom");
 const chatroomButton: HTMLDivElement = document.querySelector(".chatroom-join");
 chatroomButton.onclick = () => {
     chatroom = chatroomInput.value;
+    connection.send("joinChatroom", chatroom);
+    connection.send("listChatrooms");
 }
 
 canary.innerHTML = "✅";
