@@ -42,7 +42,7 @@ var webSocketOptions = new WebSocketOptions
 };
 
 webSocketOptions.AllowedOrigins.Add("https://localhost:7104");
-webSocketOptions.AllowedOrigins.Add("https://attochatter.corebridge.net);
+webSocketOptions.AllowedOrigins.Add("https://attochatter.corebridge.net");
 webSocketOptions.AllowedOrigins.Add("localhost:7104");
 webSocketOptions.AllowedOrigins.Add("localhost");
 
