@@ -46,6 +46,7 @@ webSocketOptions.AllowedOrigins.Add("https://attochatter.corebridge.net");
 webSocketOptions.AllowedOrigins.Add("localhost:7104");
 webSocketOptions.AllowedOrigins.Add("localhost");
 webSocketOptions.AllowedOrigins.Add("attochatter.azurewebsites.net");
+webSocketOptions.AllowedOrigins.Add("https://attochatter.azurewebsites.net");
 
 app.UseWebSockets(webSocketOptions);
 
