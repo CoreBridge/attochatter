@@ -30,7 +30,7 @@ var app = builder.Build();
 
 app.UseCors(builder =>
 {
-    builder.WithOrigins("localhost:7104", "localhost", "https://localhost:7104", "https://attochatter.corebridge.net")
+    builder.WithOrigins("localhost:7104", "localhost", "https://localhost:7104", "https://attochatter.corebridge.net","https://attochatter.azurewebsites.net")
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
@@ -45,6 +45,7 @@ webSocketOptions.AllowedOrigins.Add("https://localhost:7104");
 webSocketOptions.AllowedOrigins.Add("https://attochatter.corebridge.net");
 webSocketOptions.AllowedOrigins.Add("localhost:7104");
 webSocketOptions.AllowedOrigins.Add("localhost");
+webSocketOptions.AllowedOrigins.Add("attochatter.azurewebsites.net");
 
 app.UseWebSockets(webSocketOptions);
 
