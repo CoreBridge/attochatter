@@ -12,16 +12,17 @@ builder.Services.AddSignalR().AddJsonProtocol(options => {
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddLettuceEncrypt();
+//builder.Services.AddLettuceEncrypt();
 
-builder.WebHost.UseUrls("https://localhost:7104", "http://localhost:5104","https://cbchat.duckdns.org:443/", "http://cbchat.duckdns.org:56776/");
+builder.WebHost.UseUrls("https://localhost:7104", "http://localhost:5104","https://attochatter.corebridge.net:443/");
 builder.WebHost.ConfigureKestrel(k =>
 {
     var appServices = k.ApplicationServices;
     k.ConfigureHttpsDefaults(h =>
     {
         //h.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
-        h.UseLettuceEncrypt(appServices);
+        h.ClientCertificateMode = ClientCertificateMode.NoCertificate;
+        //h.UseLettuceEncrypt(appServices);
     });
 });
 
@@ -29,7 +30,7 @@ var app = builder.Build();
 
 app.UseCors(builder =>
 {
-    builder.WithOrigins("localhost:7104", "localhost", "https://localhost:7104", "https://cbchat.duckdns.org")
+    builder.WithOrigins("localhost:7104", "localhost", "https://localhost:7104", "https://attochatter.corebridge.net","https://attochatter.azurewebsites.net")
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
@@ -41,9 +42,11 @@ var webSocketOptions = new WebSocketOptions
 };
 
 webSocketOptions.AllowedOrigins.Add("https://localhost:7104");
-webSocketOptions.AllowedOrigins.Add("https://cbchat.duckdns.org");
+webSocketOptions.AllowedOrigins.Add("https://attochatter.corebridge.net");
 webSocketOptions.AllowedOrigins.Add("localhost:7104");
 webSocketOptions.AllowedOrigins.Add("localhost");
+webSocketOptions.AllowedOrigins.Add("attochatter.azurewebsites.net");
+webSocketOptions.AllowedOrigins.Add("https://attochatter.azurewebsites.net");
 
 app.UseWebSockets(webSocketOptions);
 
