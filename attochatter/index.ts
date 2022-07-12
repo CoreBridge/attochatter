@@ -11,8 +11,7 @@ canary.innerHTML = "✅";
 canary.title = "TS booted";
 
 const connection = new signalR.HubConnectionBuilder()
-    //.withUrl("https://cbchat.duckdns.org/hub")
-    .withUrl("/hub")
+    .withUrl("https://attochatter.azurewebsites.net/hub")
     .build();
 
 function curryJoinChatroom(button: HTMLButtonElement, chatroomName: string) {
