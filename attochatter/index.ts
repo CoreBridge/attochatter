@@ -14,6 +14,14 @@ const connection = new signalR.HubConnectionBuilder()
     .withUrl("https://attochatter.azurewebsites.net/hub")
     .build();
 
+const req = new XMLHttpRequest();
+req.addEventListener("load", function () {
+    (document.querySelector(".username") as HTMLInputElement).value = this.responseText;
+});
+req.open("GET", "/username");
+req.send();
+
+
 function curryJoinChatroom(button: HTMLButtonElement, chatroomName: string) {
     return function () {
         connection.send("joinChatroom", chatroomName);

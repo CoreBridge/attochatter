@@ -12,6 +12,12 @@ canary.title = "TS booted";
 var connection = new signalR.HubConnectionBuilder()
     .withUrl("https://attochatter.azurewebsites.net/hub")
     .build();
+var req = new XMLHttpRequest();
+req.addEventListener("load", function () {
+    document.querySelector(".username").value = this.responseText;
+});
+req.open("GET", "/username");
+req.send();
 function curryJoinChatroom(button, chatroomName) {
     return function () {
         connection.send("joinChatroom", chatroomName);
