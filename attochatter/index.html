@@ -45,7 +45,18 @@
         .message{
 
         }
-        .input{
+        .chatroom-button{
+            display: block;
+            width: 100%;
+        }
+            .chatroom-button.current {
+                background: #99ca3d;
+                font-weight: bold;
+            }
+                .chatroom-button.current:after {
+                    content: "⭐";
+                }
+        .input {
             border-top: 1px solid black;
             display: flex;
         }
@@ -80,7 +91,6 @@
                 Chatrooms
             </h2>
             <div class="chatrooms">
-                No chatrooms 😢 Make some ⬇
             </div>
             <label>
                 New: 
