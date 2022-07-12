@@ -14,7 +14,8 @@ chatroomButton.onclick = function () {
 canary.innerHTML = "✅";
 canary.title = "TS booted";
 var connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://cbchat.duckdns.org/hub")
+    //.withUrl("https://cbchat.duckdns.org/hub")
+    .withUrl("/hub")
     .build();
 connection.on("pong", function (response) {
     canary.innerHTML = "🌐";

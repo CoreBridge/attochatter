@@ -4,13 +4,40 @@
     <meta charset="utf-8" />
     <title>attochatter</title>
     <style>
-        body{
-            margin: 3em;
+        html, body{
+            margin: 0;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        header {
+            height: 4em;
+            padding: 0.5em;
+            background: #99ca3d;
+            color: white;
+        }
+        header > h1{
+            margin: 0;
         }
         .frame{
-            padding: 1em;
-            border: 1px solid black;
             background: #eee;
+            display: flex;
+            height: calc(100vh - 5em);
+        }
+        .chatroom-frame {
+            max-width: max(280px, 20%);
+            padding: 1em;
+            padding-right: 2em;
+            border-right: 1px solid black;
+        }
+        .main-frame {
+            padding: 1em;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages{
+            flex-grow: 1;
+            max-height: calc(100vh - 5em - 45px);
+            overflow: scroll;
         }
         .message:before{
             content:"> "
@@ -19,42 +46,62 @@
 
         }
         .input{
-            margin-top: 1em;
             border-top: 1px solid black;
+            display: flex;
         }
         .error-box {
             background: #e13d3d;
             color: white;
-            padding: 0.5em;
         }
+        textarea{
+            width: calc(100% - 44px);
+            display: inline-block;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .send{
+            margin: 0;
+            width: 44px;
+            height: 44px;
+            display: inline-block;
+        }
+
     </style>
-<script defer src="/main.561230101f499d3d3b26.js"></script></head>
+<script defer src="/main.a3164d6625f242b07173.js"></script></head>
 <body>
-    <h1>
-        attochatter&nbsp;<span title="typescript is not booted" class="ts-canary">❌</span>
-    </h1>
-    <div>
-        <label>
-            Username:
-            <input type="text" name="username" class="username" value="" />
-        </label>
-        <label>
-            Chatroom:
-            <input type="text" name="chatroom" class="chatroom" value="" />
-            <button type="button" class="chatroom-join">Join This Chatroom</button>
-        </label>
-    </div>
-    <div class="chatrooms">
-    </div>
+    <header>
+        <h1>
+            attochatter&nbsp;<span title="typescript is not booted" class="ts-canary">❌</span>
+        </h1>
+    </header>
     <div class="frame">
-        <div class="messages">
-            <div class="message">
+        <div class="chatroom-frame">
+            <h2>
+                Chatrooms
+            </h2>
+            <div class="chatrooms">
+                No chatrooms 😢 Make some ⬇
+            </div>
+            <label>
+                New: 
+                <input type="text" name="chatroom" class="chatroom" value="" placeholder="New Room Name" />
+                <button type="button" class="chatroom-join">Create</button>
+            </label>
+        </div>
+        <div class="main-frame">
+            <div class="username-frame">
+                <label>
+                    Username:
+                    <input type="text" name="username" class="username" value="" />
+                </label>
+            </div>
+            <div class="messages">
                 no messages in memory
             </div>
-        </div>
-        <div class="input">
-            <input type="text" name="chat" class="chat" value="" />
-            <button type="button" class="send">&rang;</button>
+            <div class="input">
+                <textarea name="chat" class="chat" value=""></textarea>
+                <button type="button" class="send">&rang;</button>
+            </div>
         </div>
     </div>
     <div class="error-box"></div>

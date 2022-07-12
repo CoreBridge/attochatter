@@ -5,6 +5,7 @@ const canary: HTMLDivElement = document.querySelector(".ts-canary");
 const chatrooms: HTMLDivElement = document.querySelector(".chatrooms");
 const chatroomInput: HTMLInputElement = document.querySelector(".chatroom");
 const chatroomButton: HTMLDivElement = document.querySelector(".chatroom-join");
+let messagesEmpty = true;
 chatroomButton.onclick = () => {
     chatroom = chatroomInput.value;
     connection.send("joinChatroom", chatroom);
@@ -15,7 +16,8 @@ canary.innerHTML = "✅";
 canary.title = "TS booted";
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://cbchat.duckdns.org/hub")
+    //.withUrl("https://cbchat.duckdns.org/hub")
+    .withUrl("/hub")
     .build();
 
 
@@ -35,10 +37,24 @@ connection.on("listChatrooms", (response: string[]) => {
 const divMessages: HTMLDivElement = document.querySelector(".messages");
 
 connection.on("chat", (username: string, message: string) => {
-    const m = document.createElement("div");
-    m.textContent = `${username}: ${message}`;
+    if (messagesEmpty) {
+        divMessages.textContent = "";
+        messagesEmpty = false;
+    }
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message";
+    const usernameDiv = document.createElement("strong");
+    if (username != null && username.length) {
+        usernameDiv.textContent = username + ": ";
+    } else {
+        usernameDiv.textContent = "Unknown User: ";
+    }
+    messageDiv.appendChild(usernameDiv);
+    const textDiv = document.createElement("span");
+    textDiv.textContent = message;
+    messageDiv.appendChild(textDiv);
 
-    divMessages.appendChild(m);
+    divMessages.appendChild(messageDiv);
     divMessages.scrollTop = divMessages.scrollHeight;
 });
 
@@ -50,7 +66,7 @@ connection.start().catch((err) => errorBox.textContent = err).then(() => {
 
 const chat: HTMLInputElement = document.querySelector(".chat");
 chat.addEventListener("keyup", (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
         send();
     }
 });
