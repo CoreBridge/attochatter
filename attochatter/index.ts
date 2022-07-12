@@ -7,11 +7,14 @@ const chatroomInput: HTMLInputElement = document.querySelector(".chatroom");
 const addChatroomButton: HTMLDivElement = document.querySelector(".chatroom-join");
 let messagesEmpty = true;
 
-canary.innerHTML = "✅";
+canary.innerHTML = "⚠";
 canary.title = "TS booted";
 
-const connection = new signalR.HubConnectionBuilder()
+const globalConnection = new signalR.HubConnectionBuilder()
     .withUrl("https://attochatter.azurewebsites.net/hub")
+    .build();
+const localConnection = new signalR.HubConnectionBuilder()
+    .withUrl("/hub")
     .build();
 
 const req = new XMLHttpRequest();
@@ -24,7 +27,7 @@ req.send();
 
 function curryJoinChatroom(button: HTMLButtonElement, chatroomName: string) {
     return function () {
-        connection.send("joinChatroom", chatroomName);
+        globalConnection.send("joinChatroom", chatroomName);
         onJoinChatroom(chatroomName);
         button.className = "chatroom-button current";
     }
@@ -40,11 +43,11 @@ function onJoinChatroom(chatroomName: string) {
     divMessages.appendChild(sysMessageDiv);
 }
 
-connection.on("pong", (response: string) => {
+globalConnection.on("pong", (response: string) => {
     canary.innerHTML = "🌐";
     canary.title = "TS booted, signalr online";
 });
-connection.on("listChatrooms", (response: string[]) => {
+globalConnection.on("listChatrooms", (response: string[]) => {
     while (chatrooms.firstChild != null) {
         chatrooms.removeChild(chatrooms.firstChild);
     }
@@ -67,14 +70,14 @@ connection.on("listChatrooms", (response: string[]) => {
 });
 addChatroomButton.onclick = () => {
     currentChatroom = chatroomInput.value;
-    connection.send("joinChatroom", currentChatroom);
-    connection.send("listChatrooms");
+    globalConnection.send("joinChatroom", currentChatroom);
+    globalConnection.send("listChatrooms");
     onJoinChatroom(currentChatroom);
 }
 
 const divMessages: HTMLDivElement = document.querySelector(".messages");
 
-connection.on("chat", (username: string, message: string) => {
+globalConnection.on("chat", (username: string, message: string) => {
     if (messagesEmpty) {
         divMessages.textContent = "";
         messagesEmpty = false;
@@ -97,11 +100,11 @@ connection.on("chat", (username: string, message: string) => {
 });
 
 const errorBox: HTMLDivElement = document.querySelector(".error-box");
-connection.start().catch((err) => errorBox.textContent = err).then(() => {
-    connection.send("Ping");
-    connection.send("joinChatroom", "General");
+globalConnection.start().catch((err) => errorBox.textContent = err).then(() => {
+    globalConnection.send("Ping");
+    globalConnection.send("joinChatroom", "General");
     onJoinChatroom("General");
-    connection.send("listChatrooms");
+    globalConnection.send("listChatrooms");
 });
 
 const chat: HTMLInputElement = document.querySelector(".chat");
@@ -116,7 +119,7 @@ document.querySelector(".send").addEventListener("click", send);
 
 function send() {
     const username = (document.querySelector(".username") as HTMLInputElement).value;
-    connection.send("chat", username, chat.value, currentChatroom).then(
+    globalConnection.send("chat", username, chat.value, currentChatroom).then(
         () => (chat.value = "")
     );
 }

@@ -11,7 +11,8 @@ builder.Services.AddSignalR().AddJsonProtocol(options => {
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddLettuceEncrypt();
+builder.Services.AddSingleton<attochatter.ServerSignalrClient>();
+builder.Services.AddSingleton<attochatter.SoundEffects>();
 
 builder.WebHost.UseUrls("https://localhost:7104", "http://localhost:5104","https://attochatter.corebridge.net:443/");
 builder.WebHost.ConfigureKestrel(k =>
@@ -54,6 +55,10 @@ app.MapHub<attochatter.Hubs.ChatHub>("/hub", o =>
     //o.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
 });
 
+app.MapHub<attochatter.Hubs.ServerHub>("/serverhub", o =>
+{
+});
+
 app.UseHttpsRedirection();
 
 app.UseDefaultFiles();
@@ -67,13 +72,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/username", () =>
+app.MapGet("/username", async () =>
 {
-    string usernameOverride = builder.Configuration["UsernameOV"];
-    if (String.IsNullOrEmpty(usernameOverride))
-        return Environment.UserName;
-    else
-        return usernameOverride;
+    string username= String.IsNullOrEmpty(builder.Configuration["UsernameOV"]) ? Environment.UserName : builder.Configuration["UsernameOV"];
+    var client = app.Services.GetService<attochatter.ServerSignalrClient>();
+    if (client != null)
+    {
+        await client.Login(username);
+    }
+    return username;
 })
 .WithName("GetUsername");
 

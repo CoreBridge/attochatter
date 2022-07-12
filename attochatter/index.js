@@ -7,10 +7,13 @@ var chatrooms = document.querySelector(".chatrooms");
 var chatroomInput = document.querySelector(".chatroom");
 var addChatroomButton = document.querySelector(".chatroom-join");
 var messagesEmpty = true;
-canary.innerHTML = "✅";
+canary.innerHTML = "⚠";
 canary.title = "TS booted";
-var connection = new signalR.HubConnectionBuilder()
+var globalConnection = new signalR.HubConnectionBuilder()
     .withUrl("https://attochatter.azurewebsites.net/hub")
+    .build();
+var localConnection = new signalR.HubConnectionBuilder()
+    .withUrl("/hub")
     .build();
 var req = new XMLHttpRequest();
 req.addEventListener("load", function () {
@@ -20,7 +23,7 @@ req.open("GET", "/username");
 req.send();
 function curryJoinChatroom(button, chatroomName) {
     return function () {
-        connection.send("joinChatroom", chatroomName);
+        globalConnection.send("joinChatroom", chatroomName);
         onJoinChatroom(chatroomName);
         button.className = "chatroom-button current";
     };
@@ -34,11 +37,11 @@ function onJoinChatroom(chatroomName) {
     sysMessageDiv.textContent = "Joined chatroom \"" + chatroomName + "\"";
     divMessages.appendChild(sysMessageDiv);
 }
-connection.on("pong", function (response) {
+globalConnection.on("pong", function (response) {
     canary.innerHTML = "🌐";
     canary.title = "TS booted, signalr online";
 });
-connection.on("listChatrooms", function (response) {
+globalConnection.on("listChatrooms", function (response) {
     while (chatrooms.firstChild != null) {
         chatrooms.removeChild(chatrooms.firstChild);
     }
@@ -61,12 +64,12 @@ connection.on("listChatrooms", function (response) {
 });
 addChatroomButton.onclick = function () {
     currentChatroom = chatroomInput.value;
-    connection.send("joinChatroom", currentChatroom);
-    connection.send("listChatrooms");
+    globalConnection.send("joinChatroom", currentChatroom);
+    globalConnection.send("listChatrooms");
     onJoinChatroom(currentChatroom);
 };
 var divMessages = document.querySelector(".messages");
-connection.on("chat", function (username, message) {
+globalConnection.on("chat", function (username, message) {
     if (messagesEmpty) {
         divMessages.textContent = "";
         messagesEmpty = false;
@@ -88,11 +91,11 @@ connection.on("chat", function (username, message) {
     divMessages.scrollTop = divMessages.scrollHeight;
 });
 var errorBox = document.querySelector(".error-box");
-connection.start().catch(function (err) { return errorBox.textContent = err; }).then(function () {
-    connection.send("Ping");
-    connection.send("joinChatroom", "General");
+globalConnection.start().catch(function (err) { return errorBox.textContent = err; }).then(function () {
+    globalConnection.send("Ping");
+    globalConnection.send("joinChatroom", "General");
     onJoinChatroom("General");
-    connection.send("listChatrooms");
+    globalConnection.send("listChatrooms");
 });
 var chat = document.querySelector(".chat");
 chat.addEventListener("keyup", function (e) {
@@ -103,5 +106,5 @@ chat.addEventListener("keyup", function (e) {
 document.querySelector(".send").addEventListener("click", send);
 function send() {
     var username = document.querySelector(".username").value;
-    connection.send("chat", username, chat.value, currentChatroom).then(function () { return (chat.value = ""); });
+    globalConnection.send("chat", username, chat.value, currentChatroom).then(function () { return (chat.value = ""); });
 }
