@@ -15,15 +15,19 @@ public class ChatHub : Hub
         {
             await Clients.Group(chatroom).SendAsync("chat", username, message);
         }
+        new SoundEffects().Play(SoundEffect.bubble_pop);
     }
 
-    private static List<string> CurrentGroups = new List<string>();
+    private static List<string> CurrentGroups = new List<string>() { "General" };
     public async Task joinChatroom(string chatroom)
     {
-        if (!CurrentGroups.Contains(chatroom))
-            CurrentGroups.Add(chatroom);
+        if (chatroom != null && chatroom.Length > 0)
+        {
+            if (!CurrentGroups.Contains(chatroom))
+                CurrentGroups.Add(chatroom);
 
-        await Groups.AddToGroupAsync(Context.ConnectionId, chatroom);
+            await Groups.AddToGroupAsync(Context.ConnectionId, chatroom);
+        }
     }
 
     public async Task listChatrooms()
