@@ -41,7 +41,7 @@ public class ChatHub : Hub
                 {
                     if (match != null)
                     {
-                        await _serverHub.Clients.Group(username).SendAsync("mention", chatroom);
+                        await _serverHub.Clients.Group(username).SendAsync("mention", username, chatroom);
                     }
                 }
             }
