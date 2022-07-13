@@ -27,7 +27,7 @@ namespace attochatter
 
             connection.On("mention", (string username, string chatroom) =>
             {
-                Console.WriteLine($"From attochatter global: you ({@username}) were @mentioned in chatroom '{chatroom}'");
+                Console.WriteLine($"From attochatter global: {@username} @mentioned you in chatroom '{chatroom}'");
                 sfx.Play(SoundEffect.doorbell);
             });
         }
