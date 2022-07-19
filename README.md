@@ -5,3 +5,6 @@
 # development
 * to build the TS once use `npm run release`
 * to watch the TS and index.html use `npm run build`
+
+# feature claims
+* Reactions: Shad
