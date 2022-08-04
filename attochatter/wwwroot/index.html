@@ -38,12 +38,65 @@
             flex-grow: 1;
             max-height: calc(100vh - 5em - 45px);
             overflow: scroll;
+            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
         }
         .message:before{
             content:"> "
         }
         .message{
-
+            position: relative;
+            background-color: #ffffff90;
+            max-width: 35rem;
+            width: max-content;
+            padding: 8px;
+            margin: 0 0 1rem;
+            border-radius: 6px;
+        }
+        .message.self {
+            background-color: #99ca3d90;
+            align-self: end;
+        }
+        .reaction-palette {
+            position: absolute;
+            right: 0;
+            top: -2rem;
+            z-index: 999;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.15s cubic-bezier(0.4, 0, 1, 1);
+            width: max-content;
+            background: #26320eb3;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+        button.reaction-button {
+            border: none;
+            cursor: pointer;
+            background: unset;
+            font-size: 1.1rem;
+        }
+        button.reaction-button:hover {
+            transform: scale(1.25);
+            transition: transform 0.2s ease-in-out;
+        }
+        .add-button {
+            color: #fff;
+        }
+        .reaction-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: end;
+            flex-wrap: nowrap;
+        }
+        .reaction-counter {
+            font-size: 0.7rem;
+        }
+        .reaction-emoji {
+            margin-left: 0.5rem;
         }
         .chatroom-button{
             display: block;
@@ -78,7 +131,7 @@
         }
 
     </style>
-<script defer src="/main.dea3a4bd24b553d0016f.js"></script></head>
+<script defer src="/main.4eee9d4d41462ca635db.js"></script></head>
 <body>
     <header>
         <h1>
